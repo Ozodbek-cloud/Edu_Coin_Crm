@@ -2,7 +2,7 @@
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/SideBar'
 import axios from 'axios'
-import { Edit3, Trash2, PlusCircle, X, Sparkles, UserCog, UserCog2 } from 'lucide-react'
+import { Edit3, Trash2, PlusCircle, X, Sparkles, UserCog, UserCog2, ShieldCheck } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -23,10 +23,9 @@ interface CenterInter {
 }
 
 
-function Creator() {
+function Roles() {
     const [creators, setFilCreators] = useState<CenterInter[]>([])
     const [centers, setCentors] = useState<CenterInter[]>([])
-    const [roles, setRoles] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
@@ -48,13 +47,6 @@ function Creator() {
             .catch(err => console.error('Xatolik:', err))
 
         axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/all', {
-            headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
-            },
-        }).then(res => { setCentors(res.data.data) })
-            .catch(err => console.error('Xatolik:', err))
-
-        axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/role-permiss/all', {
             headers: {
                 Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
             },
@@ -95,9 +87,9 @@ function Creator() {
             console.log('Xatolik:', error.message)
         }
     }
-    function handleSubmit2() {
+     function handleSubmit2() {
         console.log(formData)
-    }
+     }
 
     return (
         <div>
@@ -107,8 +99,8 @@ function Creator() {
                 <section className='p-10 w-full'>
                     <div className='flex justify-between items-center p-5 rounded-2xl shadow-sm'>
                         <div className='flex gap-3 items-center'>
-                            <UserCog2 size={40} className='text-[#9900dd]' />
-                            <h1 className='text-4xl font-semibold'>Creators</h1>
+                            <ShieldCheck size={40} className='text-[#9900dd]' />
+                            <h1 className='text-4xl font-semibold'>Roles Persmission</h1>
                         </div>
                         <button
                             onClick={() => setShowModal(true)}
@@ -233,4 +225,4 @@ function Creator() {
     )
 }
 
-export default Creator
+export default Roles
