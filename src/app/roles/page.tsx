@@ -6,90 +6,60 @@ import { Edit3, Trash2, PlusCircle, X, Sparkles, UserCog, UserCog2, ShieldCheck 
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-interface CenterInter {
+interface RoleInter {
     id: number,
     name: string,
-    phone: string,
+    category: string,
+    role: string,
+    actions: string,
     status: string,
-    email: string
-}
 
-interface CenterInter {
-    id: number,
-    name: string,
-    phone: string,
-    status: string,
-    description: string
 }
 
 
 function Roles() {
-    const [creators, setFilCreators] = useState<CenterInter[]>([])
-    const [centers, setCentors] = useState<CenterInter[]>([])
+    const [roles, setRols] = useState<RoleInter[]>([])
     const [showModal, setShowModal] = useState(false)
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        photo: '',
-        birthDay: '',
-        status: 'INACTIVE',
-    })
-    console.log(centers)
+
+    // const [centers, setCentors] = useState<RoleInter[]>([])
+    // const [formData, setFormData] = useState({
+    //     name: '',
+    //     email: '',
+    //     phone: '',
+    //     password: '',
+    //     photo: '',
+    //     birthDay: '',
+    //     status: 'INACTIVE',
+    // })
     useEffect(() => {
-        axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/users/creator/main', {
+        axios.get(`https://educoin-b2b-dev.educoinapp.uz/api/v1/role-permissions/creator/${1}`, {
             headers: {
                 Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
             },
         })
-            .then(res => { setFilCreators(res.data.data) })
+            .then(res => { setRols(res.data.data) })
             .catch(err => console.error('Xatolik:', err))
 
-        axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/all', {
-            headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
-            },
-        }).then(res => { setCentors(res.data.data) })
-            .catch(err => console.error('Xatolik:', err))
     }, [])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value })
+    // }
 
-    const handleSubmit = () => {
-        axios.post('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/',
-            formData,
-            {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
-                },
-            },
+    // const handleSubmit = () => {
+    //     axios.post('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/',
+    //         formData,
+    //         {
+    //             headers: {
+    //                 Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
+    //             },
+    //         },
 
-        )
-        setShowModal(false)
-    }
+    //     )
+    //     setShowModal(false)
+    // }
 
-    async function delete_one(id: number) {
-        try {
-            const res = await axios.delete(
-                `https://educoin-b2b-dev.educoinapp.uz/api/v1/users/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
-                    },
-                }
-            )
 
-            console.log('O‘chirildi:', res.data)
-        } catch (error: any) {
-            console.log('Xatolik:', error.message)
-        }
-    }
-     function handleSubmit2() {
-        console.log(formData)
-     }
 
     return (
         <div>
@@ -102,13 +72,13 @@ function Roles() {
                             <ShieldCheck size={40} className='text-[#9900dd]' />
                             <h1 className='text-4xl font-semibold'>Roles Persmission</h1>
                         </div>
-                        <button
+                        {/* <button
                             onClick={() => setShowModal(true)}
                             className='p-3 border hover:bg-[#9400dd] hover:text-white transition-all duration-200 border-[#9400dd] font-bold text-[#9900dd] cursor-pointer rounded-2xl px-4 flex items-center gap-2'
                         >
                             <PlusCircle size={20} />
                             Creator Qo'shish
-                        </button>
+                        </button> */}
                     </div>
 
                     <div className='mt-8 bg-white shadow-md rounded-2xl overflow-hidden '>
@@ -117,47 +87,39 @@ function Roles() {
                                 <thead className="bg-[#f8f5ff] text-[#6600aa] uppercase text-sm">
                                     <tr>
                                         <th className="py-4 px-6 ">#</th>
-                                        <th className="py-4 px-6 ">Ism</th>
-                                        <th className="py-4 px-6">Telefon</th>
-                                        <th className="py-4 px-6 ">Gmail</th>
+                                        <th className="py-4 px-6 ">Name</th>
+                                        <th className="py-4 px-6">Role</th>
+                                        <th className="py-4 px-6 ">Category</th>
+                                        <th className="py-4 px-6 ">Actions</th>
                                         <th className="py-4 px-6 ">Status</th>
-                                        <th className="py-4 px-6 ">Amallar</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    {creators.map((center, index) => (
+                                    {roles.map((role, index) => (
                                         <tr
-                                            key={center.id}
+                                            key={role.id}
                                             className="border-t border-gray-100 hover:bg-[#faf7ff] transition-all duration-150"
                                         >
                                             <td className="py-4 px-6 font-medium text-gray-700">{index + 1}</td>
-                                            <td className="py-4 px-6 font-semibold">{center.name}</td>
-                                            <td className="py-4 px-6">{center.phone}</td>
-                                            <td className="py-4 px-6  font-bold text-[#9900dd]">{center.email}</td>
+                                            <td className="py-4 px-6 font-semibold">{role.name}</td>
+                                            <td className="py-4 px-6">{role.role}</td>
+                                            <td className="py-4 px-6  font-bold text-[#9900dd]">{role.category}</td>
+                                            <td className="py-4 px-6 font-bold text-[#9900dd]">
+                                                {Array.isArray(role.actions) ? role.actions.join('  •  ') : role.actions}
+                                            </td>
+
                                             <td
-                                                className={`py-4 px-6  font-semibold ${center.status === "ACTIVE"
+                                                className={`py-4 px-6  font-semibold ${role.status === "ACTIVE"
                                                     ? "text-green-600"
-                                                    : center.status === "INACTIVE"
+                                                    : role.status === "INACTIVE"
                                                         ? "text-red-600"
                                                         : "text-yellow-400"
                                                     }`}
                                             >
-                                                {center.status}
+                                                {role.status}
                                             </td>
-                                            <td className="py-4 px-6 text-center">
-                                                <div className="flex  gap-3">
-                                                    <button className="p-2 rounded-xl hover:bg-[#e5d4ff] transition-all">
-                                                        <Edit3 size={18} className="text-[#9400dd]" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => delete_one(center.id)}
-                                                        className="p-2 rounded-xl hover:bg-[#ffe5f0] transition-all"
-                                                    >
-                                                        <Trash2 size={18} className="text-red-500" />
-                                                    </button>
-                                                </div>
-                                            </td>
+                                        
                                         </tr>
                                     ))}
                                 </tbody>
@@ -166,7 +128,7 @@ function Roles() {
 
                     </div>
 
-                    <AnimatePresence>
+                    {/* <AnimatePresence>
                         {showModal && (
                             <>
                                 <motion.div
@@ -218,7 +180,7 @@ function Roles() {
                                 </motion.div>
                             </>
                         )}
-                    </AnimatePresence>
+                    </AnimatePresence> */}
                 </section>
             </div>
         </div>
