@@ -122,43 +122,59 @@ function Creator() {
                         </button>
                     </div>
 
-                    <div className='mt-8 bg-white shadow-md rounded-2xl overflow-hidden '>
-                        <table className='w-full text-left border-collapse'>
-                            <thead className='bg-[#f8f5ff] text-[#6600aa] uppercase text-sm'>
-                                <tr>
-                                    <th className='py-4 px-6'>#</th>
-                                    <th className='py-4 px-6'>Ism</th>
-                                    <th className='py-4 px-6'>Telefon</th>
-                                    <th className='py-4 px-6'>Email</th>
-                                    <th className='py-4 px-6'>Status</th>
-                                    <th className='py-4 px-6 text-center'>Amallar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {creators.map((creator, index) => (
-                                    <tr key={creator.id} className='border-t border-gray-100 hover:bg-[#faf7ff] transition-all'>
-                                        <td className='py-4 px-6 font-medium'>{index + 1}</td>
-                                        <td className='py-4 px-6 font-semibold'>{creator.name}</td>
-                                        <td className='py-4 px-6'>{creator.phone}</td>
-                                        <td className='py-4 px-6 text-[#9900dd] font-bold'>{creator.email}</td>
-                                        <td className={`py-4 px-6 font-semibold ${creator.status === "ACTIVE" ? "text-green-600" : "text-red-600"}`}>
-                                            {creator.status}
-                                        </td>
-                                        <td className='py-4 px-6 text-center'>
-                                            <div className='flex gap-3 justify-center'>
-                                                <button className='p-2 rounded-xl hover:bg-[#e5d4ff] transition-all'>
-                                                    <Edit3 size={18} className='text-[#9400dd]' />
-                                                </button>
-                                                <button onClick={() => delete_one(creator.id)} className='p-2 rounded-xl hover:bg-[#ffe5f0] transition-all'>
-                                                    <Trash2 size={18} className='text-red-500' />
-                                                </button>
-                                            </div>
-                                        </td>
+                    <div className="mt-8 bg-white shadow-md rounded-2xl overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-left border-collapse">
+                                <thead className="bg-[#f8f5ff] text-[#6600aa] uppercase text-sm">
+                                    <tr>
+                                        <th className="py-4 px-6 whitespace-nowrap">#</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Ism</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Telefon</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Email</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Status</th>
+                                        <th className="py-4 px-6 text-center whitespace-nowrap">Amallar</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {creators.map((creator, index) => (
+                                        <tr
+                                            key={creator.id}
+                                            className="border-t border-gray-100 hover:bg-[#faf7ff] transition-all"
+                                        >
+                                            <td className="py-4 px-6 font-medium text-gray-700">{index + 1}</td>
+                                            <td className="py-4 px-6 font-semibold">{creator.name}</td>
+                                            <td className="py-4 px-6">{creator.phone}</td>
+                                            <td className="py-4 px-6 text-[#9900dd] font-bold">
+                                                {creator.email}
+                                            </td>
+                                            <td
+                                                className={`py-4 px-6 font-semibold ${creator.status === "ACTIVE"
+                                                        ? "text-green-600"
+                                                        : "text-red-600"
+                                                    }`}
+                                            >
+                                                {creator.status}
+                                            </td>
+                                            <td className="py-4 px-6 text-center">
+                                                <div className="flex justify-center gap-3">
+                                                    <button className="p-2 rounded-xl hover:bg-[#e5d4ff] transition-all">
+                                                        <Edit3 size={18} className="text-[#9400dd]" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => delete_one(creator.id)}
+                                                        className="p-2 rounded-xl hover:bg-[#ffe5f0] transition-all"
+                                                    >
+                                                        <Trash2 size={18} className="text-red-500" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
 
                     <AnimatePresence>
                         {showModal && (

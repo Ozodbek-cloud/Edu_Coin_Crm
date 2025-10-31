@@ -55,8 +55,8 @@ function Center() {
         setUpdateData({ ...updateData, [e.target.name]: e.target.value })
     }
 
-   async function handleEdit(editId: number) {
-      await setShowUpdate(!showUpdate)
+    async function handleEdit(editId: number) {
+        await setShowUpdate(!showUpdate)
         setEditId(editId)
     }
     const handleSubmit = () => {
@@ -125,41 +125,65 @@ function Center() {
                         </button>
                     </div>
 
-                    <div className='mt-8 bg-white shadow-md rounded-2xl overflow-hidden'>
-                        <table className='w-full text-left'>
-                            <thead className='bg-[#f8f5ff] text-[#6600aa] uppercase text-sm'>
-                                <tr>
-                                    <th className='py-4 px-6'>#</th>
-                                    <th className='py-4 px-6'>Markaz nomi</th>
-                                    <th className='py-4 px-6'>Telefon</th>
-                                    <th className='py-4 px-6'>Status</th>
-                                    <th className='py-4 px-6 text-center'>Description</th>
-                                    <th className='py-4 px-6 text-center'>Amallar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filcenterss.map((center, index) => (
-                                    <tr key={center.id} className='hover:bg-[#faf7ff] transition-all duration-150'>
-                                        <td className='py-4 px-6 font-medium text-gray-700'>{index + 1}</td>
-                                        <td className='py-4 px-6 font-semibold'>{center.name}</td>
-                                        <td className='py-4 px-6'>{center.phone}</td>
-                                        <td className={`py-4 px-6 ${center.status == 'CENTER' ? 'text-green-600' : center.status == 'PRIVATE' ? 'text-red-600' : 'text-yellow-400'}`}>{center.status}</td>
-                                        <td className='py-4 px-6 text-center font-bold text-[#9900dd]'>{center.description}</td>
-                                        <td className='py-4 px-6 text-center'>
-                                            <div className='flex justify-center gap-3'>
-                                                <button onClick={() => handleEdit(center.id)} className='p-2 rounded-xl hover:bg-[#e5d4ff] transition-all'>
-                                                    <Edit3 size={18} className='text-[#9400dd]' />
-                                                </button>
-                                                <button onClick={() => delete_one(center.id)} className='p-2 rounded-xl hover:bg-[#ffe5f0] transition-all'>
-                                                    <Trash2 size={18} className='text-red-500' />
-                                                </button>
-                                            </div>
-                                        </td>
+                    <div className="mt-8 bg-white shadow-md rounded-2xl overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-left border-collapse">
+                                <thead className="bg-[#f8f5ff] text-[#6600aa] uppercase text-sm">
+                                    <tr>
+                                        <th className="py-4 px-6 whitespace-nowrap">#</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Markaz nomi</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Telefon</th>
+                                        <th className="py-4 px-6 whitespace-nowrap">Status</th>
+                                        <th className="py-4 px-6 text-center whitespace-nowrap">Description</th>
+                                        <th className="py-4 px-6 text-center whitespace-nowrap">Amallar</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody>
+                                    {filcenterss.map((center, index) => (
+                                        <tr
+                                            key={center.id}
+                                            className="hover:bg-[#faf7ff] transition-all duration-150 border-t border-gray-100"
+                                        >
+                                            <td className="py-4 px-6 font-medium text-gray-700">{index + 1}</td>
+                                            <td className="py-4 px-6 font-semibold">{center.name}</td>
+                                            <td className="py-4 px-6">{center.phone}</td>
+                                            <td
+                                                className={`py-4 px-6 ${center.status === "CENTER"
+                                                        ? "text-green-600"
+                                                        : center.status === "PRIVATE"
+                                                            ? "text-red-600"
+                                                            : "text-yellow-400"
+                                                    }`}
+                                            >
+                                                {center.status}
+                                            </td>
+                                            <td className="py-4 px-6 text-center font-bold text-[#9900dd]">
+                                                {center.description}
+                                            </td>
+                                            <td className="py-4 px-6 text-center">
+                                                <div className="flex justify-center gap-3">
+                                                    <button
+                                                        onClick={() => handleEdit(center.id)}
+                                                        className="p-2 rounded-xl hover:bg-[#e5d4ff] transition-all"
+                                                    >
+                                                        <Edit3 size={18} className="text-[#9400dd]" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => delete_one(center.id)}
+                                                        className="p-2 rounded-xl hover:bg-[#ffe5f0] transition-all"
+                                                    >
+                                                        <Trash2 size={18} className="text-red-500" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
 
                     <AnimatePresence>
                         {showModal && (
