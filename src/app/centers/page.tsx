@@ -37,6 +37,12 @@ function Center() {
         subdomain: ''
     })
 
+    const [alert, setAlert] = useState<{ show: boolean, type: 'success' | 'error', message: string }>({
+        show: false,
+        type: 'success',
+        message: ''
+    })
+
     useEffect(() => {
         axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/all', {
             headers: {
@@ -47,36 +53,46 @@ function Center() {
             .catch(err => console.error('Xatolik:', err))
     }, [])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
-    const handleUpdateChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const handleUpdateChange = (e: any) => {
         setUpdateData({ ...updateData, [e.target.name]: e.target.value })
     }
 
     async function handleEdit(editId: number) {
-        await setShowUpdate(!showUpdate)
+        setShowUpdate(true)
         setEditId(editId)
     }
-    const handleSubmit = () => {
-        axios.post('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/',
-            formData,
-            {
-                headers: {
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
-                },
-            },
-        ).then(() => {
+
+    async function handleSubmit() {
+        try {
+            await axios.post(
+                'https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/',
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`,
+                    },
+                }
+            )
+            setAlert({ show: true, type: 'success', message: 'Center muvaffaqiyatli qo‘shildi!' })
             setShowModal(false)
-            window.location.reload()
-        })
+            setTimeout(() => window.location.reload(), 2000)
+        } catch (err: any) {
+            setAlert({
+                show: true,
+                type: 'error',
+                message: err.response?.data?.message || "Xatolik yuz berdi!"
+            })
+        }
     }
 
-
     const handleUpdate = (editId: number) => {
-        if (!editId) return 'Xatooooooooooo'
-        axios.put(`https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/${1}`,
+        if (!editId) return
+        axios.put(
+            `https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/${editId}`,
             updateData,
             {
                 headers: {
@@ -91,7 +107,7 @@ function Center() {
 
     async function delete_one(id: number) {
         try {
-            const res = await axios.delete(
+            await axios.delete(
                 `https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/${id}`,
                 {
                     headers: {
@@ -100,9 +116,7 @@ function Center() {
                 }
             )
             setCenters(prev => prev.filter(item => item.id !== id))
-        } catch (error: any) {
-            console.log('Xatolik:', error.message)
-        }
+        } catch { }
     }
 
     return (
@@ -141,38 +155,20 @@ function Center() {
 
                                 <tbody>
                                     {filcenterss.map((center, index) => (
-                                        <tr
-                                            key={center.id}
-                                            className="hover:bg-[#faf7ff] transition-all duration-150 border-t border-gray-100"
-                                        >
+                                        <tr key={center.id} className="hover:bg-[#faf7ff] transition-all duration-150 border-t border-gray-100">
                                             <td className="py-4 px-6 font-medium text-gray-700">{index + 1}</td>
                                             <td className="py-4 px-6 font-semibold">{center.name}</td>
                                             <td className="py-4 px-6">{center.phone}</td>
-                                            <td
-                                                className={`py-4 px-6 ${center.status === "CENTER"
-                                                        ? "text-green-600"
-                                                        : center.status === "PRIVATE"
-                                                            ? "text-red-600"
-                                                            : "text-yellow-400"
-                                                    }`}
-                                            >
-                                                {center.status}
+                                            <td className={`py-4 px-6 ${center.status === "CENTER" ? "text-green-600" : "text-red-600"}`}>
+                                                {center.status === 'CENTER' ? `O'quv Markaz` : `Xususiy Maktab`}
                                             </td>
-                                            <td className="py-4 px-6 text-center font-bold text-[#9900dd]">
-                                                {center.description}
-                                            </td>
+                                            <td className="py-4 px-6 text-center font-bold text-[#9900dd]">{center.description}</td>
                                             <td className="py-4 px-6 text-center">
                                                 <div className="flex justify-center gap-3">
-                                                    <button
-                                                        onClick={() => handleEdit(center.id)}
-                                                        className="p-2 rounded-xl hover:bg-[#e5d4ff] transition-all"
-                                                    >
+                                                    <button onClick={() => handleEdit(center.id)} className="p-2 rounded-xl hover:bg-[#e5d4ff] transition-all">
                                                         <Edit3 size={18} className="text-[#9400dd]" />
                                                     </button>
-                                                    <button
-                                                        onClick={() => delete_one(center.id)}
-                                                        className="p-2 rounded-xl hover:bg-[#ffe5f0] transition-all"
-                                                    >
+                                                    <button onClick={() => delete_one(center.id)} className="p-2 rounded-xl hover:bg-[#ffe5f0] transition-all">
                                                         <Trash2 size={18} className="text-red-500" />
                                                     </button>
                                                 </div>
@@ -180,10 +176,10 @@ function Center() {
                                         </tr>
                                     ))}
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
-
 
                     <AnimatePresence>
                         {showModal && (
@@ -195,6 +191,7 @@ function Center() {
                                     className='fixed inset-0 bg-black/40 z-40'
                                     onClick={() => setShowModal(false)}
                                 />
+
                                 <motion.div
                                     initial={{ x: '100%' }}
                                     animate={{ x: 0 }}
@@ -208,6 +205,7 @@ function Center() {
                                             <X />
                                         </button>
                                     </div>
+
                                     <div className='flex flex-col gap-4'>
                                         <input name='name' value={formData.name} onChange={handleChange} placeholder='Markaz nomi' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
                                         <input name='logo' value={formData.logo} onChange={handleChange} placeholder='Logo URL' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
@@ -218,7 +216,11 @@ function Center() {
                                         </select>
                                         <textarea name='description' value={formData.description} onChange={handleChange} placeholder='Izoh...' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
                                         <input name='subdomain' value={formData.subdomain} onChange={handleChange} placeholder='Subdomain' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
-                                        <button onClick={handleSubmit} className='bg-[#9900dd] text-white py-3 rounded-xl mt-3 font-semibold hover:bg-[#7c00b6] transition-all'>
+
+                                        <button
+                                            onClick={handleSubmit}
+                                            className='bg-[#9900dd] text-white py-3 rounded-xl mt-3 font-semibold hover:bg-[#7c00b6] transition-all'
+                                        >
                                             Saqlash
                                         </button>
                                     </div>
@@ -249,21 +251,43 @@ function Center() {
                                         </button>
                                     </div>
                                     <div className='flex flex-col gap-4'>
-                                        <input name='name' value={updateData.name || ''} onChange={handleUpdateChange} placeholder='Markaz nomi' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
-                                        <input name='logo' value={updateData.logo || ''} onChange={handleUpdateChange} placeholder='Logo URL' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
-                                        <input name='phone' value={updateData.phone || ''} onChange={handleUpdateChange} placeholder='Telefon raqam' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
-                                        <select name='status' value={updateData.status || ''} onChange={handleUpdateChange} className='border p-3 rounded-xl focus:outline-[#9900dd]'>
+                                        <input name='name' value={updateData.name} onChange={handleUpdateChange} placeholder='Markaz nomi' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
+                                        <input name='logo' value={updateData.logo} onChange={handleUpdateChange} placeholder='Logo URL' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
+                                        <input name='phone' value={updateData.phone} onChange={handleUpdateChange} placeholder='Telefon raqam' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
+                                        <select name='status' value={updateData.status} onChange={handleUpdateChange} className='border p-3 rounded-xl focus:outline-[#9900dd]'>
                                             <option value='PRIVATE'>PRIVATE</option>
                                             <option value='CENTER'>CENTER</option>
                                         </select>
-                                        <textarea name='description' value={updateData.description || ''} onChange={handleUpdateChange} placeholder='Izoh...' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
-                                        <input name='subdomain' value={updateData.subdomain || ''} onChange={handleUpdateChange} placeholder='Subdomain' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
+                                        <textarea name='description' value={updateData.description} onChange={handleUpdateChange} placeholder='Izoh...' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
+                                        <input name='subdomain' value={updateData.subdomain} onChange={handleUpdateChange} placeholder='Subdomain' className='border p-3 rounded-xl focus:outline-[#9900dd]' />
                                         <button onClick={() => handleUpdate(editId!)} className='bg-[#9900dd] text-white py-3 rounded-xl mt-3 font-semibold hover:bg-[#7c00b6] transition-all'>
                                             Yangilash
                                         </button>
                                     </div>
                                 </motion.div>
                             </>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {alert.show && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.7 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.7 }}
+                                transition={{ duration: 0.25 }}
+                                className={`fixed top-10 right-10 z-[999] p-6 rounded-2xl shadow-2xl min-w-[260px] text-lg font-semibold
+                                    ${alert.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
+                                `}
+                            >
+                                {alert.message}
+                                <button
+                                    onClick={() => setAlert(prev => ({ ...prev, show: false }))}
+                                    className='mt-3 bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200'
+                                >
+                                    OK
+                                </button>
+                            </motion.div>
                         )}
                     </AnimatePresence>
                 </section>

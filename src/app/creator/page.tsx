@@ -32,6 +32,11 @@ function Creator() {
     const [centers, setCenters] = useState<CenterInter[]>([])
     const [roles, setRoles] = useState<RolesInter[]>([])
     const [showModal, setShowModal] = useState(false)
+    const [alert, setAlert] = useState<{ show: boolean, type: 'success' | 'error', message: string }>({
+        show: false,
+        type: 'success',
+        message: ''
+    })
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -41,7 +46,7 @@ function Creator() {
         birthDay: '',
         status: 'INACTIVE',
         centerId: '',
-        roleId: ''
+        role: 'CREATOR'
     })
 
     const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlNVUEVSQURNSU4iLCJpYXQiOjE3NjE0ODQ3NDUsImV4cCI6MTc2ODY4NDc0NX0.S5bUXkj3pPIPOI6Yok8eH64xpwCl6gomE5bell9v-bI`
@@ -49,15 +54,12 @@ function Creator() {
     useEffect(() => {
         axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/users/creator/main', { headers: { Authorization: token } })
             .then(res => setCreators(res.data.data))
-            .catch(err => console.error('Xatolik:', err))
 
         axios.get('https://educoin-b2b-dev.educoinapp.uz/api/v1/centers/all', { headers: { Authorization: token } })
             .then(res => setCenters(res.data.data))
-            .catch(err => console.error('Xatolik:', err))
 
         axios.get(`https://educoin-b2b-dev.educoinapp.uz/api/v1/role-permissions/creator/${1}`, { headers: { Authorization: token } })
             .then(res => setRoles(res.data.data))
-            .catch(err => console.error('Xatolik:', err))
     }, [])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -78,27 +80,40 @@ function Creator() {
 
     const handleSubmit = async () => {
         try {
-            const res = await axios.post('https://educoin-b2b-dev.educoinapp.uz/api/v1/users/creator', formData, {
+            await axios.post('https://educoin-b2b-dev.educoinapp.uz/api/v1/users/creator', formData, {
                 headers: { Authorization: token }
             })
-            console.log('Yangi creator qo‘shildi:', res.data)
+            setAlert({
+                show: true,
+                type: 'success',
+                message: "Creator muvaffaqiyatli qo'shildi!"
+            })
             setShowModal(false)
-            window.location.reload()
-        } catch (err) {
-            console.error('Xatolik:', err)
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000)
+        } catch (err: any) {
+            setAlert({
+                show: true,
+                type: 'error',
+                message: err.response?.data?.message || "Xatolik yuz berdi!"
+            })
         }
     }
 
     async function delete_one(id: number) {
         try {
-            const res = await axios.delete(
+            await axios.delete(
                 `https://educoin-b2b-dev.educoinapp.uz/api/v1/users/${id}`,
                 { headers: { Authorization: token } }
             )
-            console.log('O‘chirildi:', res.data)
             setCreators(creators.filter(c => c.id !== id))
         } catch (error: any) {
-            console.log('Xatolik:', error.message)
+            setAlert({
+                show: true,
+                type: 'error',
+                message: error.message
+            })
         }
     }
 
@@ -115,7 +130,7 @@ function Creator() {
                         </div>
                         <button
                             onClick={() => setShowModal(true)}
-                            className='p-3 border hover:bg-[#9400dd] hover:text-white transition-all duration-200 border-[#9400dd] font-bold text-[#9900dd] cursor-pointer rounded-2xl px-4 flex items-center gap-2'
+                            className='p-3 border hover:bg-[#9400dd] hover:text-white transition-all duration-200 border-[#9400dd] font-bold text-[#9900dd] rounded-2xl px-4 flex items-center gap-2'
                         >
                             <PlusCircle size={20} />
                             Creator Qo‘shish
@@ -147,12 +162,7 @@ function Creator() {
                                             <td className="py-4 px-6 text-[#9900dd] font-bold">
                                                 {creator.email}
                                             </td>
-                                            <td
-                                                className={`py-4 px-6 font-semibold ${creator.status === "ACTIVE"
-                                                        ? "text-green-600"
-                                                        : "text-red-600"
-                                                    }`}
-                                            >
+                                            <td className={`py-4 px-6 font-semibold ${creator.status === "ACTIVE" ? "text-green-600" : "text-red-600"}`}>
                                                 {creator.status}
                                             </td>
                                             <td className="py-4 px-6 text-center">
@@ -174,7 +184,6 @@ function Creator() {
                             </table>
                         </div>
                     </div>
-
 
                     <AnimatePresence>
                         {showModal && (
@@ -217,14 +226,9 @@ function Creator() {
                                             ))}
                                         </select>
 
-                                        <select name='roleId' value={formData.roleId} onChange={handleSelectChange} className='border p-3 rounded-xl focus:outline-[#9900dd]'>
-                                            <option value=''>Rollarni tanlang</option>
-                                            {roles.map(el => (
-                                                <option key={el.id} value={el.id}>
-                                                    {el.name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <div className='border p-3 rounded-xl border-[#9900dd]'>
+                                            <h1 className='font-bold text-[#9900dd]'>CREATOR</h1>
+                                        </div>
 
                                         <button onClick={handleSubmit} className='bg-[#9900dd] text-white py-3 rounded-xl mt-3 font-semibold hover:bg-[#7c00b6] transition-all'>
                                             Saqlash
@@ -232,6 +236,27 @@ function Creator() {
                                     </div>
                                 </motion.div>
                             </>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {alert.show && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.7 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.7 }}
+                                transition={{ duration: 0.3 }}
+                                className={`fixed top-10 right-10 z-50 p-6 rounded-2xl shadow-2xl text-xl font-semibold 
+                                ${alert.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}
+                            >
+                                <p>{alert.message}</p>
+                                <button
+                                    onClick={() => setAlert(prev => ({ ...prev, show: false }))}
+                                    className='mt-3 bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200'
+                                >
+                                    OK
+                                </button>
+                            </motion.div>
                         )}
                     </AnimatePresence>
                 </section>

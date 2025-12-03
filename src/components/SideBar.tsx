@@ -17,14 +17,14 @@ function Sidebar() {
               <UserCog size={28} />
               <h1 className='text-[18px] font-medium'>Creators</h1>
             </div>
-            <div onClick={() => navigate.push('/roles')} className='flex items-center gap-3 px-4 py-3  cursor-pointer border-white hover:bg-[#9400dd] hover:text-white rounded-2xl transition-all duration-200'>
+            {/* <div onClick={() => navigate.push('/roles')} className='flex items-center gap-3 px-4 py-3  cursor-pointer border-white hover:bg-[#9400dd] hover:text-white rounded-2xl transition-all duration-200'>
               <ShieldCheck size={28} />
               <h1 className='text-[18px] font-medium'>Roles</h1>
             </div>
             <div onClick={() => navigate.push('/teachers')} className='flex items-center gap-3 px-4 py-3  cursor-pointer border-white hover:bg-[#9400dd] hover:text-white rounded-2xl transition-all duration-200'>
               <GraduationCap size={28} />
               <h1 className='text-[18px] font-medium'>O‘qituvchilar</h1>
-            </div>
+            </div> */}
           </div>
 
           <div onClick={() => navigate.push('')} className='flex items-center gap-3 px-4 py-3 border-t border-gray-100 cursor-pointer hover:bg-[#9400dd] hover:text-white rounded-2xl transition-all duration-200'>
